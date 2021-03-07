@@ -28,11 +28,14 @@ function parseEventLogLine(line, parameterList, separator=";") {
     try {
         let parameterNames = tokenizeLine(parameterList, separator);
         let parameterValues = tokenizeLine(line, separator);
-        let result = new eventlog.Event(generateUID());
-        for(let i=0; i<parameterNames.length; i++) {
-            result.addAttribute(new eventlog.EventAttribute(generateUID(), parameterNames[i], parameterValues[i]));
-        }
-        return result;
+        if(parameterValues.length>0) {
+            let result = new eventlog.Event(generateUID());
+            for(let i=0; i<parameterNames.length; i++) {
+                result.addAttribute(new eventlog.EventAttribute(generateUID(), parameterNames[i], parameterValues[i]));
+            }
+            return result;
+        } else
+            return null;
     } catch (err) {
         console.log("Error while parsing the line: "+line);
         console.error(err);
@@ -53,13 +56,16 @@ function parseLogFile(filename, parameterList, separator=";") {
 
 function createEventFromLogLine(logLine, parameterList, separator=";") {
     try {
-        let result = new eventlog.Event(generateUID());
         let parameterNames = tokenizeLine(parameterList, separator);
         let parameterValues = tokenizeLine(logLine, separator);
-        for(let i=0; i<parameterNames.length; i++) {
-            result.addAttribute(generateUID(),parameterNames[i],parameterValues[i]);
-        }
-        return result;
+        if(parameterValues.length>0) {
+            let result = new eventlog.Event(generateUID());
+            for(let i=0; i<parameterNames.length; i++) {
+                result.addAttribute(generateUID(),parameterNames[i],parameterValues[i]);
+            }
+            return result;
+        } else
+            return null;
     } catch(err) {
         console.log("Error while creating the EventLog from LogLine: "+logLine);
         console.error(err);
@@ -69,8 +75,8 @@ function createEventFromLogLine(logLine, parameterList, separator=";") {
 function createEventLog(log, parameterList, separator=";") {
     try {
         let result = [];
-        const lines = log.split(/\r?\n/);
-        result = lines.map((line) => {
+        const logLines = log.split(/\r?\n/);
+        result = logLines.map((line) => {
             return createEventFromLogLine(line, parameterList, separator);
         });
         return result;
@@ -88,10 +94,12 @@ function createTraces(events, traceIdParameter) {
             let found = false;
             result.filter(trace => trace.id === key).map(trace => {trace.addEvent(event); found= true});
             if(!found) {
+                console.log("Adding a trace");
                 let trace = new Trace(key);
                 trace.addEvent(event);
                 result.push(trace);
             }
+            console.log("Result length: "+result.length);
         });
         return result;
     } catch(err) {

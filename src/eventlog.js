@@ -49,6 +49,23 @@ class Trace {
       console.log(err);
     }
   }
+
+  getAttributeSignature(attributeName) {
+    let result = "";
+    /*
+    result = this.events.reduce((sign, event) => {
+      let eventAttribute = event.getAttributeByName(attribute);
+      console.log("Event name:"+eventAttribute.name);
+      sign = sign+";"+eventAttribute.value;
+      return sign;
+    });
+    */
+    for(let i=0; i<this.events.length; i++) {
+      let attribute = this.events[i].getAttributeByName(attributeName);
+      result = result+";"+attribute.value;
+    }
+    return result;
+  }
 }
 
 module.exports =  {
