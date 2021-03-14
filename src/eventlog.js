@@ -62,7 +62,7 @@ class Trace {
     */
     for(let i=0; i<this.events.length; i++) {
       let attribute = this.events[i].getAttributeByName(attributeName);
-      result = result+";"+attribute.value;
+      result += attribute.value+";";
     }
     return result;
   }

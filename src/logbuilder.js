@@ -94,12 +94,12 @@ function createTraces(events, traceIdParameter) {
             let found = false;
             result.filter(trace => trace.id === key).map(trace => {trace.addEvent(event); found= true});
             if(!found) {
-                console.log("Adding a trace");
+                //console.log("Adding a trace");
                 let trace = new Trace(key);
                 trace.addEvent(event);
                 result.push(trace);
             }
-            console.log("Result length: "+result.length);
+            //console.log("Result length: "+result.length);
         });
         return result;
     } catch(err) {

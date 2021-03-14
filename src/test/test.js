@@ -1,6 +1,65 @@
 const assert = require('assert');
 const logbuilder = require('../logbuilder'); 
 const fs = require('fs');
+const eventlog = require('../eventlog');
+
+
+
+describe('Event', function() {
+
+    let event = null;
+  
+    beforeEach(function() {
+      event = new eventlog.Event(0000001);
+      event.addAttribute(1, "nome", "Paolo");
+      event.addAttribute(2, "cognome", "Anedda");
+      event.addAttribute(3, "timestamp", "2020-11-27T10:56:45.694Z");
+    });
+  
+    it('getAttributeByName', function() {
+      let nameAttribute = event.getAttributeByName("nome");
+      assert.strictEqual(nameAttribute.id, 1);
+      assert.strictEqual(nameAttribute.name, "nome");
+      assert.strictEqual(nameAttribute.value, "Paolo");
+    });
+}); 
+
+describe('Trace', function() {
+    let trace;
+    
+    beforeEach(function() {
+      trace = new eventlog.Trace(1);
+      let event1 = new eventlog.Event(2);
+      event1.addAttribute(3, "name", "Paolo");
+      event1.addAttribute(4, "surname", "Anedda");
+      event1.addAttribute(5, "timestamp", "2020-11-27T10:56:45.694Z");
+      let event2 = new eventlog.Event(6);
+      event2.addAttribute(7, "name", "Luke");
+      event2.addAttribute(8, "surname", "Skywalker");
+      event2.addAttribute(9, "timestamp", "2020-11-27T10:57:45.694Z");
+      let event3 = new eventlog.Event(10);
+      event3.addAttribute(11, "name", "Anakyn");
+      event3.addAttribute(12, "surname", "Skywalker");
+      event3.addAttribute(13, "timestamp", "2020-11-27T10:58:45.694Z"); 
+      trace.addEvent(event1);
+      trace.addEvent(event2);
+      trace.addEvent(event3);     
+    });
+
+    it('Trace.getAttributeValuesByName', function() {
+      let attributeValues = trace.getAttributeValuesByName("name");
+      assert.strictEqual(attributeValues.length, 3);
+      assert.strictEqual(attributeValues[0], "Paolo");
+      assert.strictEqual(attributeValues[1], "Luke");
+      assert.strictEqual(attributeValues[2], "Anakyn");
+    });
+
+    it('Trace.getAttributeSignature', function() {
+      let attributeSignature = trace.getAttributeSignature("name");
+      let expectedAttributeSignature = "Paolo;Luke;Anakyn;";
+      assert.strictEqual(attributeSignature, expectedAttributeSignature);
+    });
+});
 
 describe('logbuilder', function() {
 
@@ -129,41 +188,4 @@ describe('logbuilder', function() {
       assert.strictEqual(result, true);
     });
   
-  });
-
-  describe('eventlog', function() {
-    let parameterList;
-    let logContent;
-
-    beforeEach(function() {
-      parameterList = "timestamp;type;node_description;node_name;carrier_id;sample_id";
-      logContent = "\"2020-11-27T10:56:45.694Z\";\"dream.uif.tube-log-request\";node_a;a;;\"016405064501\"\n"+
-      "\"2020-11-27T10:56:46.694Z\";\"dream.uif.tube-log-request\";node_b;b;;\"016405064501\"\n"+
-      "\"2020-11-27T10:56:47.694Z\";\"dream.uif.tube-log-request\";node_c;c;;\"016405064501\"\n"+
-      "\"2020-11-27T10:56:48.694Z\";\"dream.uif.tube-log-request\";node_d;d;;\"016405064501\"\n"+
-      "\"2020-11-27T10:56:45.694Z\";\"dream.uif.tube-log-request\";node_a;a;;\"016405064502\"\n"+
-      "\"2020-11-27T10:56:46.694Z\";\"dream.uif.tube-log-request\";node_b;b;;\"016405064502\"\n"+
-      "\"2020-11-27T10:56:47.694Z\";\"dream.uif.tube-log-request\";node_c;c;;\"016405064502\"\n"+
-      "\"2020-11-27T10:56:48.694Z\";\"dream.uif.tube-log-request\";node_d;d;;\"016405064502\"\n";
-    });
-
-    it('Trace.getAttributeValuesByName', function() {
-      let events = logbuilder.createEventLog(logContent, parameterList);
-      let traces = logbuilder.createTraces(events, "sample_id");
-      let trace = traces[0].getAttributeValuesByName("node_description");
-      assert.strictEqual(trace[0], "node_a");
-      assert.strictEqual(trace[1], "node_b");
-      assert.strictEqual(trace[2], "node_c");
-      assert.strictEqual(trace[3], "node_d");
-      assert.strictEqual(traces.length, 2);
-    });
-
-    it('Trace.getAttributeSignature', function() {
-      let events = logbuilder.createEventLog(logContent, parameterList);
-      let traces = logbuilder.createTraces(events, "sample_id");
-      let attributeSignature = traces[0].getAttributeSignature("node_description");
-      let expectedAttributeSignature = "node_a;node_b;node_c;node_d";
-      assert.strictEqual(attributeSignature, expectedAttributeSignature);
-    });
-  });
-  
+});
