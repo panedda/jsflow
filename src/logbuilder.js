@@ -76,7 +76,7 @@ function createEventLog(log, parameterList, separator=";") {
     try {
         let result = [];
         const logLines = log.split(/\r?\n/);
-        result = logLines.map((line) => {
+        result = logLines.filter(line => line!="").map((line) => {
             return createEventFromLogLine(line, parameterList, separator);
         });
         return result;
@@ -146,6 +146,12 @@ function compareTracesByAttribute(traceA, traceB, attributeName) {
     }
 }
 
+function compareTracesByAttributeSignature(traceA, traceB, attributeName) {
+    let result = false;
+    if(traceA.getAttributeSignature(attributeName)===traceB.getAttributeSignature(attributeName)) result = true;
+    return result;
+}
+
 module.exports =  {
     tokenizeLine : tokenizeLine,
     parseEventLogLine : parseEventLogLine,
@@ -153,5 +159,6 @@ module.exports =  {
     createEventLog : createEventLog,
     createTraces : createTraces,
     compareTraces : compareTraces,
-    compareTracesByAttribute : compareTracesByAttribute
+    compareTracesByAttribute : compareTracesByAttribute,
+    compareTracesByAttributeSignature : compareTracesByAttributeSignature
 }
