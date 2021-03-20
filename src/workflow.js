@@ -1,35 +1,7 @@
 const eventlog = require('./eventlog');
+const graph = require('./digraph');
 
-class Node {
-  constructor(id, name, value) {
-    this.id = id;
-    this.name = name;
-    this.value = value;
-  }
-}
-
-class Edge {
-  constructor(id, name, value) {
-    this.id = id;
-    this.name = name;
-    this.value = value;
-    this.startNode;
-    this.endNode;
-  }
-}
-
-class DiGraph {
-  constructor() {
-    this.nodes = [];
-    this.edges = [];
-  }
-
-  addEdge(edge) {
-    this.edges.push(edge);
-  }
-}
-
-class Workflow extends DiGraph {
+class Workflow extends graph.DiGraph {
   constructor(id) {
     super();
     this.id = id;
@@ -60,7 +32,7 @@ class Workflow extends DiGraph {
   }
 }
 
-class WorkflowInstance extends DiGraph {
+class WorkflowInstance extends graph.DiGraph {
   constructor(id, workflow) {
     super();
     this.id = id;
@@ -73,7 +45,7 @@ class WorkflowInstance extends DiGraph {
   }
 }
 
-class Activity extends Node {
+class Activity extends graph.Node {
   constructor(id, name, description) {
     super();
     this._id = id;
@@ -106,7 +78,7 @@ class Activity extends Node {
   }
 }
 
-class Relationship extends Edge {
+class Relationship extends graph.Edge {
   constructor(id) {
     super();
     this.id = id;
@@ -117,8 +89,9 @@ class Relationship extends Edge {
   }
 }
 
-class ActivityInstance {
+class ActivityInstance extends graph.Node {
   constructor(id, activity) {
+    super();
     this.id = id;
     this.activity = activity;
     this.startEvent;
@@ -133,9 +106,6 @@ class ActivityInstance {
 }
 
 module.exports =  {
-  Node : Node,
-  Edge : Edge,
-  DiGraph : DiGraph,
   Workflow : Workflow,
   WorkflowInstance : WorkflowInstance,
   Activity : Activity,
