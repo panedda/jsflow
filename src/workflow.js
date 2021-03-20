@@ -1,7 +1,37 @@
 const eventlog = require('./eventlog');
 
-class Workflow {
+class Node {
+  constructor(id, name, value) {
+    this.id = id;
+    this.name = name;
+    this.value = value;
+  }
+}
+
+class Edge {
+  constructor(id, name, value) {
+    this.id = id;
+    this.name = name;
+    this.value = value;
+    this.startNode;
+    this.endNode;
+  }
+}
+
+class DiGraph {
+  constructor() {
+    this.nodes = [];
+    this.edges = [];
+  }
+
+  addEdge(edge) {
+    this.edges.push(edge);
+  }
+}
+
+class Workflow extends DiGraph {
   constructor(id) {
+    super();
     this.id = id;
     this.activities = [];
     this.relationships = [];
@@ -30,8 +60,9 @@ class Workflow {
   }
 }
 
-class WorkflowInstance {
+class WorkflowInstance extends DiGraph {
   constructor(id, workflow) {
+    super();
     this.id = id;
     this.workflow = workflow;
     this.activityInstances = [];
@@ -42,16 +73,42 @@ class WorkflowInstance {
   }
 }
 
-class Activity {
-  constructor(id) {
-    this.id = id;
-    this.name = "";
-    this.description = "";
+class Activity extends Node {
+  constructor(id, name, description) {
+    super();
+    this._id = id;
+    this._name = "";
+    this._description = "";
+  }
+
+  set id(newId) {
+    this._id = newId;
+  }
+
+  get id() {
+    return this._id;
+  }
+
+  set name(newName) {
+    this._name = newName;
+  }
+
+  get name() {
+    return this._name;
+  }
+
+  set description(newDescription) {
+    this._description = newDescription;
+  }
+
+  get description() {
+    return this._description;
   }
 }
 
-class Relationship {
+class Relationship extends Edge {
   constructor(id) {
+    super();
     this.id = id;
     this.startNode;
     this.endNode;
@@ -76,6 +133,9 @@ class ActivityInstance {
 }
 
 module.exports =  {
+  Node : Node,
+  Edge : Edge,
+  DiGraph : DiGraph,
   Workflow : Workflow,
   WorkflowInstance : WorkflowInstance,
   Activity : Activity,
