@@ -52,11 +52,19 @@ class Trace {
 
   getAttributeSignature(attributeName) {
     let result = "";
+    
     /*
-    result = this.events.reduce((sign, event) => {
-      let eventAttribute = event.getAttributeByName(attribute);
+    this.events.reduce((result, event) => {
+      let eventAttribute = event.getAttributeByName(attributeName);
       console.log("Event name:"+eventAttribute.name);
-      sign = sign+";"+eventAttribute.value;
+      result += eventAttribute.value+";";
+      return result;
+    });
+    
+    result = this.events.reduce((sign, event) => {
+      let eventAttribute = event.getAttributeByName(attributeName);
+      console.log("Event name:"+eventAttribute.name);
+      sign += eventAttribute.value+";";
       return sign;
     });
     */
@@ -68,9 +76,24 @@ class Trace {
   }
 }
 
+function calculateEventsInterval(endEvent, startEvent) {
+  try {
+    let result = 0;
+    // get end time in millisecond
+    let endEventTimestamp = new Date(endEvent.getAttributeByName("timestamp").value).getTime();
+    // get start time in millisecond
+    let startEventTimestamp = new Date(startEvent.getAttributeByName("timestamp").value).getTime();
+    result = endEventTimestamp - startEventTimestamp;
+    return result;
+  } catch(err) {
+    return 0;
+  }
+}
+
 module.exports =  {
   Event : Event,
   EventAttribute : EventAttribute,
-  Trace : Trace
+  Trace : Trace,
+  calculateEventsInterval : calculateEventsInterval
 }
 
