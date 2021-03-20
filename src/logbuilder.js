@@ -50,7 +50,7 @@ function parseLogFile(filename, parameterList, separator=";") {
         return result;
     } catch (err) {
         console.log("Error while reading: "+filename);
-        console.error(err);
+        console.error(err);calculateEventsInterval(this.endEvent, this.startEvent);
     }
 }
 
