@@ -1,6 +1,6 @@
 const assert = require('assert');
 const { DiGraph, Edge } = require('../digraph');
-const digrah = require('../digraph'); 
+const digraph = require('../digraph'); 
 
 describe('DiGraph', function() {
     let dgraph;
@@ -8,21 +8,21 @@ describe('DiGraph', function() {
     let edgeAB, edgeAC, edgeBD, edgeCD;
   
     beforeEach(function() {
-        dgraph = new digrah.DiGraph();
+        dgraph = new digraph.DiGraph();
         let id = 0;
-        nodeA = new digrah.Node(id++, "nodeA", "nodeA description");
-        nodeB = new digrah.Node(id++, "nodeB", "nodeB description");
-        nodeC = new digrah.Node(id++, "nodeC", "nodeC description");
-        nodeD = new digrah.Node(id++, "nodeD", "nodeD description");
-        nodeE = new digrah.Node(id++, "nodeE", "nodeE description");
+        nodeA = new digraph.Node(id++, "nodeA", "nodeA description");
+        nodeB = new digraph.Node(id++, "nodeB", "nodeB description");
+        nodeC = new digraph.Node(id++, "nodeC", "nodeC description");
+        nodeD = new digraph.Node(id++, "nodeD", "nodeD description");
+        nodeE = new digraph.Node(id++, "nodeE", "nodeE description");
         dgraph.addNode(nodeA);
         dgraph.addNode(nodeB);
         dgraph.addNode(nodeC);
         dgraph.addNode(nodeD);
-        edgeAB = new digrah.Edge(id++, "A->B", "A->B Value", nodeA, nodeB);
-        edgeAC = new digrah.Edge(id++, "A->C", "A->C Value", nodeA, nodeC);
-        edgeBD = new digrah.Edge(id++, "B->D", "B->D Value", nodeB, nodeD);
-        edgeCD = new digrah.Edge(id++, "C->D", "C->D Value", nodeC, nodeD);
+        edgeAB = new digraph.Edge(id++, "A->B", "A->B Value", nodeA, nodeB);
+        edgeAC = new digraph.Edge(id++, "A->C", "A->C Value", nodeA, nodeC);
+        edgeBD = new digraph.Edge(id++, "B->D", "B->D Value", nodeB, nodeD);
+        edgeCD = new digraph.Edge(id++, "C->D", "C->D Value", nodeC, nodeD);
         dgraph.addEdge(edgeAB);
         dgraph.addEdge(edgeAC);
         dgraph.addEdge(edgeBD);
@@ -45,5 +45,23 @@ describe('DiGraph', function() {
         assert.strictEqual(positionC, 2);
         assert.strictEqual(positionD, 3);
         assert.strictEqual(positionE, -1);
+    });
+
+    it('nodeAlreadyExists', function() {
+        let gr = new digraph.DiGraph();
+        let node = new digraph.Node(0, "prova", "prova");
+        let response;
+        try {
+            response = gr.addNode(node);
+            assert.strictEqual(response, 1);
+            response = gr.addNode(node);
+            assert.strictEqual(response, 1);
+        } catch(error) {
+            if (error instanceof digraph.NodeAlreadyExists) {
+                console.error(error.id + ";" + error.name + ";" + error.value)
+            } else {
+                console.error(error.message)
+            }
+        }
     });
   });
