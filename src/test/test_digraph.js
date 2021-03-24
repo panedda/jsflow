@@ -29,9 +29,9 @@ describe('DiGraph', function() {
         dgraph.addEdge(edgeCD);
     });
   
-    it('adjacent', function() {
-        let adj = dgraph.adjacent(nodeA);
-        assert.strictEqual(adj.length, 0);
+    it('getAdjacencyList', function() {
+        let adj = dgraph.getAdjacencyList(nodeA);
+        assert.strictEqual(adj.length, 2);
     });
 
     it('getNodePosition', function() {
@@ -52,8 +52,6 @@ describe('DiGraph', function() {
         let node = new digraph.Node(0, "prova", "prova");
         let response;
         try {
-            response = gr.addNode(node);
-            assert.strictEqual(response, 1);
             response = gr.addNode(node);
             assert.strictEqual(response, 1);
         } catch(error) {
