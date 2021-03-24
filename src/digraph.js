@@ -20,12 +20,18 @@ class DiGraph {
     constructor() {
       this.nodes = [];
       this.edges = [];
+      this.edgeVertexes = [];
     }
   
     addEdge(edge) {
         if(this.getEdgePosition(edge)!=-1) 
             throw new EdgeAlreadyExists(edge);        
         this.edges.push(edge);
+        /*
+        let startNodePosition = this.getNodePosition(edge.startNode);
+        let endNodePosition = this.getNodePosition(edge.endNode);
+        this.edgeVertexes.push([edge.id, startNodePosition, endNodePosition]);
+        */
         return 1;
     } 
 
@@ -36,8 +42,13 @@ class DiGraph {
         return 1;
     }
 
-    adjacent(node) {
+    getAdjacencyList(node) {
         let result = [];
+        for(let e=0; e<this.edges.length; e++) {
+            if(this.edges[e].startNode === node) {
+                result.push(this.edges[e].endNode);
+            }
+        }
         return result;
     }
 
